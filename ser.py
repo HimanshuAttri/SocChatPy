@@ -5,11 +5,15 @@ import Tkinter
 from Tkinter import INSERT, LEFT,RIGHT,END, re
 import thread
 import netifaces as ni
-ni.ifaddresses('wlp3s0')
-HOST = ni.ifaddresses('wlp3s0')[2][0]['addr']
+
+wlan = 'wlp3s0'
+sendto= '192.168.0.106'
+sendPort = 7010
+ni.ifaddresses(wlan)
+HOST = ni.ifaddresses(wlan)[2][0]['addr']
 
 
-def m1(e):
+def send(e):
         
     	 sock = None
          data = E1.get()
@@ -19,28 +23,29 @@ def m1(e):
          print "Creating socket"
          sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-         print "Connecting to localhost on port 9900"
-         sock.connect(('192.168.0.108', 7010))
+         print "Connecting to localhost on port 7010"
+         sock.connect((, sendPort))
          print "Connection success!"
  
     	 sock.sendall(data)
     	 print 'Data sent to server! Now waiting for response...'
    
     	 del sock
+       print 'Data sent Sucessfully'
 
 
 
-def fun(t,d):
+def listen(t,d):
     
     # Symbolic name, meaning all available interfaces
-  PORT = 7010 # Arbitrary non-privileged port
+  listenPort = 7010 # Arbitrary non-privileged port
  
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   print 'Socket created'
  
 #Bind socket to local host and port
   try:
-      s.bind((HOST, PORT))
+      s.bind((HOST, listenPort))
   except socket.error as msg:
       print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
       sys.exit()
@@ -95,8 +100,8 @@ E1.pack(side = RIGHT)
 text = Tkinter.Text(top)
 text.pack(side = LEFT)
 
-thread.start_new_thread( fun,("Thread-1", 2, ))
-E1.bind('<Return>',m1)
+thread.start_new_thread( listen,("Thread-1", 2, ))
+E1.bind('<Return>',send)
 
 top.mainloop()
 
