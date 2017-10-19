@@ -2,15 +2,35 @@ import socket
 import sys
 import urllib2, urllib
 import Tkinter
-from Tkinter import INSERT, LEFT,RIGHT,END, re
+from Tkinter import *
 import thread
 import netifaces as ni
 
 wlan = 'wlp3s0'
 sendto= '192.168.0.106'
 sendPort = 7010
+listenPort = 7010
 ni.ifaddresses(wlan)
 HOST = ni.ifaddresses(wlan)[2][0]['addr']
+
+
+
+top = Tkinter.Tk()
+
+
+
+
+
+
+
+
+
+
+def start():
+  thread.start_new_thread( listen,("Thread-1", 2, ))
+  sendto=B1.get()
+  sendPort=B2.get()
+  listenPort=B3.get()
 
 
 def send(e):
@@ -18,27 +38,27 @@ def send(e):
     	 sock = None
          data = E1.get()
          text.insert(INSERT, HOST+data+'\n')
-         text.pack()
+      
          E1.delete(0, 'end')
          print "Creating socket"
          sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
          print "Connecting to localhost on port 7010"
-         sock.connect((, sendPort))
+         sock.connect((sendto, sendPort))
          print "Connection success!"
  
     	 sock.sendall(data)
     	 print 'Data sent to server! Now waiting for response...'
    
     	 del sock
-       print 'Data sent Sucessfully'
+       #print 'Data sent Sucessfully'
 
 
 
 def listen(t,d):
     
     # Symbolic name, meaning all available interfaces
-  listenPort = 7010 # Arbitrary non-privileged port
+   # Arbitrary non-privileged port
  
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   print 'Socket created'
@@ -74,7 +94,7 @@ def listen(t,d):
 
     
       text.insert(INSERT, data)
-      text.pack()
+     
       import subprocess
       subprocess.call(['notify-send','-i','/home/himanshu/Desktop/ico.png',ipv,tail]) 
       
@@ -86,23 +106,41 @@ def listen(t,d):
 
       print data
 
+
+
      
 
 
 
 
-
-top = Tkinter.Tk()
+text = Tkinter.Text(top)
+text.grid(row=2,column=1)
 
 E1 = Tkinter.Entry(top, bd =5)
+E1.grid(row=3,column=1)
 
-E1.pack(side = RIGHT)
-text = Tkinter.Text(top)
-text.pack(side = LEFT)
 
-thread.start_new_thread( listen,("Thread-1", 2, ))
+
+
+B1=Entry(top)
+B1.grid(row=1,column=0)
+B1.insert(END, 'Send To Ip')
+
+B2=Entry(top)
+B2.grid(row=1,column=1)
+B2.insert(END, 'Send To Port')
+
+B3=Entry(top)
+B3.grid(row=1,column=2)
+B3.insert(END, 'Receiving Port')
+
+B4=Button(top, text='Start')
+B4.grid(row=2,column=2)
+
+
+
+
 E1.bind('<Return>',send)
-
 top.mainloop()
 
 
