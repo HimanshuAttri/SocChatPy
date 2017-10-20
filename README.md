@@ -3,8 +3,8 @@
 socket chat on local network.
 
 ### Install
--Python
--Tkinter
+#### -Python
+#### -Tkinter
 
 change wlan value in ser.py to your hardware name. To get hardware name use 'ifcongig' in Linux and 'ipconfig' in Windows
 
