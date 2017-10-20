@@ -13,6 +13,7 @@ listenPort = 7010
 ni.ifaddresses(wlan)
 HOST = ni.ifaddresses(wlan)[2][0]['addr']
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 
 
@@ -32,10 +33,11 @@ def destroysocket():
 
 
 def start():
-  thread.start_new_thread( listen,("Thread-1", 2, ))
+  
   sendto=B1.get()
   sendPort=int(B2.get())
   listenPort=B3.get()
+  thread.start_new_thread( listen,("Thread-1", 2, ))
 
 
 def send(e):
