@@ -104,7 +104,7 @@ def listen(t,d):
       data= addr[0]+": "+data
 
     
-      text.insert(INSERT, data)
+      text.insert(INSERT, data+"\n")
      
       import subprocess
       subprocess.call(['notify-send','-i','/home/himanshu/Desktop/ico.png',ipv,tail]) 
